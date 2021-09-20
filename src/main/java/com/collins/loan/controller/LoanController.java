@@ -43,31 +43,40 @@ public class LoanController {
 
     @GetMapping("/list")
     public @ResponseBody CompletableFuture<ResponseEntity> list() {
-
+       
         return loanService.getAllLoans().<ResponseEntity>thenApply(ResponseEntity::ok)
                 .exceptionally(handleGetLoanFailure);
+
+        
     }
    
     private static Function<Throwable, ResponseEntity<? extends List<LoanModel>>> handleGetLoanFailure = throwable -> {
         LOGGER.error("Failed to read records: {}", throwable);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     };
-    
-    
-
-    @PostMapping("/create")
-    public LoanModel create(@RequestBody LoanModel loanModel) throws Exception {
-        if(loanModel.getAmount_requested()>25000|| loanModel.getAmount_requested()<=0){
-            throw new Exception("Invalid loan request Please try a figure between 1 and 25000");
+     @PostMapping("/add_customer")
+    public LoanModel addUser(@RequestBody LoanModel loanModel) throws Exception {
+        if(loanModel.getLoan_limit()>25000|| loanModel.getLoan_limit()<=0){
+            throw new Exception("failed");
         }
-        loanService.saveOrUpdate(loanModel);
+        loanService.save(loanModel);
         return loanModel;
     }
+    
 
-    @PutMapping("edit/{id}")
+//    @PostMapping("/add_loan")
+//    public LoanModel createLoan(@RequestBody LoanModel loanModel) throws Exception {
+//        if(loanModel.getAmount_requested()>25000|| loanModel.getAmount_requested()<=0){
+//            throw new Exception("Invalid loan request Please try a figure between 1 and 25000");
+//        }
+//        loanService.saveOrUpdate(loanModel);
+//        return loanModel;
+//    }
+
+    @PutMapping("add_loan/{id}")
     public LoanModel updateLoan(@PathVariable long id, @RequestBody LoanModel loan)throws Exception {
         if(loan.getAmount_requested()>25000|| loan.getAmount_requested()<=0){
-            throw new Exception("Invalid loan request Please try a figure between 1 and 25000");
+            throw new Exception("failed");
         }
         loanService.saveOrUpdate(loan);
     return loan;

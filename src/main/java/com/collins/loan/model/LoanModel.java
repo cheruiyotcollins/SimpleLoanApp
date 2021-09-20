@@ -41,6 +41,10 @@ public class LoanModel implements Serializable {
     private String mobile;
     @Column(name = "location")
     private String location;
+    @Column(name = "loan_limit")
+    private long loan_limit;
+    @Column(name = "loan_percentage")
+    private double loan_percentage;
     @Column(name = "date")
     private String date;
     @Column(name = "duedate")
@@ -49,86 +53,12 @@ public class LoanModel implements Serializable {
     private long amount_requested;
     @Column(name = "amount_due")
     private long amount_due;
+     @Column(name = "status")
+    private String status;
+    
+    
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getDuedate() {
-        return duedate;
-    }
-
-    public void setDuedate(String duedate) {
-        this.duedate = duedate;
-    }
-
-    public long getAmount_requested() {
-        return amount_requested;
-    }
-
-    public void setAmount_requested(long amount_requested) {
-        this.amount_requested = amount_requested;
-    }
-
-    public long getAmount_due() {
-        return amount_due;
-    }
-
-    public void setAmount_due(long amount_due) {
-        this.amount_due = amount_due;
-    }
+    
 
    
    

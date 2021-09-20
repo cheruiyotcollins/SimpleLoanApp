@@ -43,6 +43,16 @@ public class LoanService {
         return loanRepository.findById(id).get();
     }
 
+    public void save(LoanModel loanModel) {
+        if(loanModel.getLoan_limit()<=15000){
+        loanModel.setLoan_percentage(10);
+        }if(loanModel.getLoan_limit()<=25000&&loanModel.getLoan_limit()>15000){
+        loanModel.setLoan_percentage(12.5);
+        }
+        
+        loanRepository.save(loanModel);
+    }
+
     public void saveOrUpdate(LoanModel loanModel) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate str = LocalDate.now();
@@ -54,6 +64,8 @@ public class LoanService {
             loanModel.setAmount_due(loanModel.getAmount_requested() + (int) (0.10 * loanModel.getAmount_requested()));
             loanModel.setDate(str.toString());
             loanModel.setDuedate(str.plusDays(15).toString());
+            loanModel.setLoan_percentage(10);
+            loanModel.setStatus("Success");
             loanRepository.save(loanModel);
 
         }
@@ -61,6 +73,8 @@ public class LoanService {
             loanModel.setAmount_due(loanModel.getAmount_requested() + (int) (0.125 * loanModel.getAmount_requested()));
             loanModel.setDate(str.toString());
             loanModel.setDuedate(str.plusDays(25).toString());
+            loanModel.setLoan_percentage(12.5);
+            loanModel.setStatus("Success");
             loanRepository.save(loanModel);
 
         }
