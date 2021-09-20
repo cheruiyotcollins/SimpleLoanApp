@@ -5,22 +5,27 @@
  */
 package com.collins.loan.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Data;
 
 /**
  *
  * @author KEN19283
  */
+@Data
 @Entity
 @Table(name = "loan")
-public class LoanModel {
-
+public class LoanModel implements Serializable {
+  private static final long serialVersionUID = 1L;
+  
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "name")
@@ -38,8 +43,12 @@ public class LoanModel {
     private String location;
     @Column(name = "date")
     private String date;
-    @Column(name = "loanamount")
-    private long loanamount;
+    @Column(name = "duedate")
+    private String duedate;
+    @Column(name = "amount_requested")
+    private long amount_requested;
+    @Column(name = "amount_due")
+    private long amount_due;
 
     public long getId() {
         return id;
@@ -97,14 +106,31 @@ public class LoanModel {
         this.date = date;
     }
 
-    public Long getLoanamount() {
-        return loanamount;
+    public String getDuedate() {
+        return duedate;
     }
 
-    public void setLoanamount(Long loanamount) {
-        this.loanamount = loanamount;
+    public void setDuedate(String duedate) {
+        this.duedate = duedate;
     }
 
+    public long getAmount_requested() {
+        return amount_requested;
+    }
+
+    public void setAmount_requested(long amount_requested) {
+        this.amount_requested = amount_requested;
+    }
+
+    public long getAmount_due() {
+        return amount_due;
+    }
+
+    public void setAmount_due(long amount_due) {
+        this.amount_due = amount_due;
+    }
+
+   
    
     
 

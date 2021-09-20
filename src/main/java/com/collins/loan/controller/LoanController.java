@@ -8,78 +8,84 @@ package com.collins.loan.controller;
 import com.collins.loan.model.LoanModel;
 import com.collins.loan.service.LoanService;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  *
  * @author KEN19283
  */
 @RestController
-@RequestMapping(value="/home")
+@RequestMapping(value = "/loan", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LoanController {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoanController.class);
+
+
     @Autowired
     LoanService loanService;
-     @RequestMapping(value="/list", method=RequestMethod.GET)
-    public ModelAndView list() {
-        ModelAndView model = new ModelAndView("loan_list");
-        List<LoanModel> loanList = loanService.getAllLoans();
-        model.addObject("loanList", loanList);
-        model.setViewName("loan_list");
-        return model;
+    private final MediaType mediaType = MediaType.APPLICATION_JSON;
+
+    @GetMapping("/list")
+    public @ResponseBody CompletableFuture<ResponseEntity> list() {
+
+        return loanService.getAllLoans().<ResponseEntity>thenApply(ResponseEntity::ok)
+                .exceptionally(handleGetLoanFailure);
     }
-    @RequestMapping(value = "/addLoan/", method = RequestMethod.GET)
-    public LoanModel addLoan() {
+   
+    private static Function<Throwable, ResponseEntity<? extends List<LoanModel>>> handleGetLoanFailure = throwable -> {
+        LOGGER.error("Failed to read records: {}", throwable);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    };
+    
+    
 
-        LoanModel loanModel = new LoanModel();
-
+    @PostMapping("/create")
+    public LoanModel create(@RequestBody LoanModel loanModel) throws Exception {
+        if(loanModel.getAmount_requested()>25000|| loanModel.getAmount_requested()<=0){
+            throw new Exception("Invalid loan request Please try a figure between 1 and 25000");
+        }
+        loanService.saveOrUpdate(loanModel);
         return loanModel;
     }
 
-    @RequestMapping(value = "/updateLoan/{id}", method = RequestMethod.GET)
-    public ModelAndView editLoan(@PathVariable("id_number") long id) {
-
-        ModelAndView model = new ModelAndView();
-
-        LoanModel loanModel = loanService.getLoanById(id);
-        model.addObject("loanForm", loanModel);
-        model.setViewName("loan_form");
-
-        return model;
-
+    @PutMapping("edit/{id}")
+    public LoanModel updateLoan(@PathVariable long id, @RequestBody LoanModel loan)throws Exception {
+        if(loan.getAmount_requested()>25000|| loan.getAmount_requested()<=0){
+            throw new Exception("Invalid loan request Please try a figure between 1 and 25000");
+        }
+        loanService.saveOrUpdate(loan);
+    return loan;
     }
 
-    @RequestMapping(value = "/viewLoan/{id}", method = RequestMethod.GET)
-    public ModelAndView viewLoan(@PathVariable("id_number") long id) {
+    @GetMapping("view/{id}")
+    public LoanModel viewLoan(@PathVariable long id) {
 
-        ModelAndView model = new ModelAndView();
         LoanModel personDetails = loanService.getLoanById(id);
-        model.addObject("personDetails", personDetails);
-        model.setViewName("person_details");
 
-        return model;
-
+        return personDetails;
     }
 
-    @RequestMapping(value = "/saveLoan", method = RequestMethod.POST)
-    public ModelAndView save(@ModelAttribute("loanForm") LoanModel loanModel) {
-        loanService.saveOrUpdate(loanModel);
-
-        return new ModelAndView("redirect:/home/list");
-
-    }
-
-    @RequestMapping(value = "/deleteLoan/{id}", method = RequestMethod.GET)
-    public ModelAndView delete(@PathVariable("id") long id) {
+    @DeleteMapping("delete/{id}")
+    public LoanModel delete(@PathVariable long id) {
 
         loanService.deleteLoan(id);
-
-        return new ModelAndView("redirect:/home/list");
+        return new LoanModel();
 
     }
 

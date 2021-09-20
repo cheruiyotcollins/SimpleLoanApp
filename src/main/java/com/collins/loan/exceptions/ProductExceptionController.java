@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.collins.loan.repository;
+package com.collins.loan.exceptions;
 
-import com.collins.loan.model.LoanModel;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 /**
  *
  * @author KEN19283
  */
-public interface LoanRepository extends JpaRepository<LoanModel, Long >{
+@ControllerAdvice
+public class ProductExceptionController {
     
 }
