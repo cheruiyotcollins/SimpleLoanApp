@@ -78,8 +78,8 @@ public class LoanController {
         if(loan.getAmount_requested()>25000|| loan.getAmount_requested()<=0){
             throw new Exception("failed");
         }
-        loanService.saveOrUpdate(loan);
-    return loan;
+        loanService.saveOrUpdate(id,loan);
+    return loanService.getLoanById(id);
     }
 
     @GetMapping("view/{id}")

@@ -53,29 +53,29 @@ public class LoanService {
         loanRepository.save(loanModel);
     }
 
-    public void saveOrUpdate(LoanModel loanModel) {
+    public void saveOrUpdate(long id,LoanModel loanModel) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate str = LocalDate.now();
         str.format(formatter);
+        LoanModel loan =loanRepository.findById(id).get();
+        long loanRequest = loanModel.getAmount_requested();
 
-        long loanLimit = loanModel.getAmount_requested();
-
-        if (loanLimit <= 15000) {
-            loanModel.setAmount_due(loanModel.getAmount_requested() + (int) (0.10 * loanModel.getAmount_requested()));
-            loanModel.setDate(str.toString());
-            loanModel.setDuedate(str.plusDays(15).toString());
-            loanModel.setLoan_percentage(10);
-            loanModel.setStatus("Success");
-            loanRepository.save(loanModel);
+        if ( loanRequest<= 15000) {
+            loan.setAmount_due(loanRequest + (int) (0.10 * loanRequest));
+            loan.setDate(str.toString());
+            loan.setDuedate(str.plusDays(15).toString());
+            loan.setStatus("SUCCESS");
+            loan.setAmount_requested(loanRequest);
+            loanRepository.save(loan);
 
         }
-        if (loanLimit <= 25000 && loanLimit > 15000) {
-            loanModel.setAmount_due(loanModel.getAmount_requested() + (int) (0.125 * loanModel.getAmount_requested()));
-            loanModel.setDate(str.toString());
-            loanModel.setDuedate(str.plusDays(25).toString());
-            loanModel.setLoan_percentage(12.5);
-            loanModel.setStatus("Success");
-            loanRepository.save(loanModel);
+        if (loanRequest <= 25000 && loanRequest > 15000) {
+            loan.setAmount_due(loanRequest + (int) (0.125 * loanRequest));
+            loan.setDate(str.toString());
+            loan.setDuedate(str.plusDays(25).toString());
+            loan.setStatus("SUCCESS");
+            loan.setAmount_requested(loanRequest);
+            loanRepository.save(loan);
 
         }
 
