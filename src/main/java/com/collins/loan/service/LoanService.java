@@ -66,6 +66,7 @@ public class LoanService {
             loan.setDuedate(str.plusDays(15).toString());
             loan.setStatus("SUCCESS");
             loan.setAmount_requested(loanRequest);
+            loan.setLoan_percentage(12.5);
             loanRepository.save(loan);
 
         }
@@ -75,6 +76,7 @@ public class LoanService {
             loan.setDuedate(str.plusDays(25).toString());
             loan.setStatus("SUCCESS");
             loan.setAmount_requested(loanRequest);
+            loan.setLoan_percentage(12.5);
             loanRepository.save(loan);
 
         }
